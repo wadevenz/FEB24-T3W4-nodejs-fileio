@@ -1,0 +1,5 @@
+PORT=3030
+SOME_DATABASE_URL=blah blah blah
+SECURITY_TOKEN=token_here
+SECRET_API_KEY=secret_api_key
+JWT_SECRET_KEY=secret jwt key

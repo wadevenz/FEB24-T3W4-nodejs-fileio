@@ -18,20 +18,49 @@ Object.keys(defaultEnv).forEach(envKey => {
 
 console.log(contentToWrite);
 
-const fs = require("node:fs");
 
-// fs.writeFileSync(".env", contentToWrite);
+// Promises based version of nose fs
+const fs = require("node:fs/promises");
 
-console.log("Before the fs callback");
+console.log("Before the promise");
+fs.writeFile(".env", contentToWrite).then(() => {
+    console.log("After the file has been written");
+}).then(() => {
+    fs.writeFile(".someOtherFile", contentToWrite).then(() => {
+        console.log("After the file has been written in the 2nd block");
 
-// fs.writeFile(filePth, fileContents, callback);
-fs.writeFile(".env", contentToWrite, (error) => {
-    if (error) {
-        console.log("File writing had errors!");
-    }else {
-        console.log("File has been written!");
-    }
-    // console.log("writefile has reached the callback");
+        fs.writeFile(".someOtherFile2", contentToWrite).then(() => {
+            console.log("After the file has been written in the 3rd block");
+        }).catch((error) => {
+            console.log("Error occure in a deeply nested promis chain");
+        });
+    }).catch(error => {
+        console.log("Error occured in the 2nd promise chain");
+    });
+    
+}).catch((error) => {
+    console.log("This error occured:", error);
+}).finally(() => {
+    console.log("All file writing has been written");
 });
+console.log("After the promise");
 
-console.log("After the fs callback");
+
+
+// const fs = require("node:fs");
+
+// // fs.writeFileSync(".env", contentToWrite);
+
+// console.log("Before the fs callback");
+
+// // fs.writeFile(filePth, fileContents, callback);
+// fs.writeFile(".env", contentToWrite, (error) => {
+//     if (error) {
+//         console.log("File writing had errors!");
+//     }else {
+//         console.log("File has been written!");
+//     }
+//     // console.log("writefile has reached the callback");
+// });
+
+// console.log("After the fs callback");
